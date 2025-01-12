@@ -11,6 +11,7 @@ contract JVCore is ERC721Enumerable, Ownable {
     using Strings for uint256;
 
     uint256 public expireDuration; // 过期时长（以秒为单位）
+    uint256 public minCheckInInterval; // 最小打卡间隔时间（以秒为单位）
     uint256 private _tokenIdCounter;
     POPBadge public popBadge; // POPBadge 合约实例
 
@@ -25,10 +26,12 @@ contract JVCore is ERC721Enumerable, Ownable {
     event CheckIn(uint256 indexed tokenId, uint256 timestamp, uint256 blockNumber);
     event Revoked(uint256 indexed tokenId, address indexed owner);
     event ExpireDurationUpdated(uint256 newDuration, uint256 updatedAt);
+    event MinCheckInIntervalUpdated(uint256 newInterval, uint256 updatedAt);
 
     // 构造函数，初始化 POPBadge 合约地址
-    constructor(uint256 initialExpireDuration, address popBadgeAddress) ERC721("JVCore", "JVC") Ownable(msg.sender) {
+    constructor(uint256 initialExpireDuration, uint256 initialMinCheckInInterval, address popBadgeAddress) ERC721("JVCore", "JVC") Ownable(msg.sender) {
         expireDuration = initialExpireDuration; // 初始化过期时长
+        minCheckInInterval = initialMinCheckInInterval; // 初始化最小打卡间隔时间
         popBadge = POPBadge(popBadgeAddress); // 初始化 POPBadge 合约
     }
 
@@ -43,6 +46,8 @@ contract JVCore is ERC721Enumerable, Ownable {
     // 签到功能
     function checkIn(uint256 tokenId) public {
         require(ownerOf(tokenId) == msg.sender, "Not the owner of the token");
+        require(block.timestamp - _checkInInfo[tokenId].lastCheckInTime >= minCheckInInterval, "Check-in too soon");
+
         _checkInInfo[tokenId].lastCheckInTime = block.timestamp;
         _checkInInfo[tokenId].lastCheckInBlock = block.number; // 记录区块高度
         _checkInInfo[tokenId].popCount += 1;
@@ -94,6 +99,13 @@ contract JVCore is ERC721Enumerable, Ownable {
         require(newDuration > 0, "Expire duration must be greater than 0");
         expireDuration = newDuration;
         emit ExpireDurationUpdated(newDuration, block.timestamp);
+    }
+
+    // 设置最小打卡间隔时间（仅管理员可调用）
+    function setMinCheckInInterval(uint256 newInterval) public onlyOwner {
+        require(newInterval > 0, "Min check-in interval must be greater than 0");
+        minCheckInInterval = newInterval;
+        emit MinCheckInIntervalUpdated(newInterval, block.timestamp);
     }
 
     // 生成彩色Logo SVG
