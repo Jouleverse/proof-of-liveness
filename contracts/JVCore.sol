@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/utils/Base64.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts@5.1.0/access/Ownable.sol";
+import "@openzeppelin/contracts@5.1.0/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts@5.1.0/utils/Base64.sol";
+import "@openzeppelin/contracts@5.1.0/utils/Strings.sol";
 import "./POPBadge.sol"; // 导入 POPBadge 合约
 
 contract JVCore is ERC721Enumerable, Ownable {

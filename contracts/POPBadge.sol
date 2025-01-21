@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/utils/Base64.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts@5.1.0/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts@5.1.0/utils/Base64.sol";
+import "@openzeppelin/contracts@5.1.0/utils/Strings.sol";
 
 contract POPBadge is ERC721Enumerable {
     using Strings for uint256;
