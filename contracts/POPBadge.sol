@@ -33,7 +33,7 @@ contract POPBadge is ERC721Enumerable {
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         _requireOwned(tokenId); // 使用 _requireOwned 检查 tokenId 是否存在
 
-        string memory svg = _generateRandomColorSVG();
+        string memory svg = _generateRandomColorSVG(tokenId);
         string memory json = Base64.encode(
             bytes(
                 string(
@@ -53,9 +53,9 @@ contract POPBadge is ERC721Enumerable {
     }
 
     // 生成随机颜色 SVG
-    function _generateRandomColorSVG() private view returns (string memory) {
+    function _generateRandomColorSVG(uint256 tokenId) private view returns (string memory) {
         // 使用 block.timestamp 和 msg.sender 生成伪随机值
-        bytes32 random = keccak256(abi.encodePacked(block.timestamp, msg.sender));
+        bytes32 random = keccak256(abi.encodePacked(tokenId, block.timestamp, msg.sender));
         string memory color = string(abi.encodePacked("#", _toHexString(random[0]), _toHexString(random[1]), _toHexString(random[2])));
 
         return string(
