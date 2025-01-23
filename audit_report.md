@@ -85,6 +85,8 @@
   - 使用 `block.timestamp` 和 `msg.sender` 生成伪随机数。这种方式容易被矿工操纵。
   - **建议**：使用更安全的随机数生成方式，例如 Chainlink VRF。
 
+修正：徽章颜色各个不同，但是一旦生成需要固定下来。
+
 #### **2.1.3 Token ID 溢出**
 - `_tokenIdCounter` 是一个 `uint256` 类型的变量，理论上不会溢出。但在极端情况下，如果 `_tokenIdCounter` 达到最大值，可能会导致问题。
 - **建议**：在 `mint` 函数中添加一个检查，确保 `_tokenIdCounter` 不会溢出。
