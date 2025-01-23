@@ -53,7 +53,7 @@ contract JVCore is ERC721Enumerable, Ownable {
         _checkInInfo[tokenId].popCount += 1;
 
         // Mint 一个 POP 徽章
-        popBadge.mint(msg.sender, tokenId, block.number, block.timestamp);
+        popBadge.mint(msg.sender, tokenId);
 
         emit CheckIn(tokenId, block.timestamp, block.number);
     }

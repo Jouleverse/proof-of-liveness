@@ -21,12 +21,18 @@ contract POPBadge is ERC721Enumerable {
     constructor() ERC721("POPBadge", "POP") {}
 
     // Mint POP 徽章
-    function mint(address to, uint256 jvCoreTokenId, uint256 checkInBlockNumber, uint256 checkInTimestamp) public {
+    function mint(address to, uint256 jvCoreTokenId) public {
         uint256 tokenId = _tokenIdCounter;
         _tokenIdCounter += 1;
         _safeMint(to, tokenId);
 
-        _popInfo[tokenId] = POPInfo(jvCoreTokenId, checkInBlockNumber, checkInTimestamp);
+        _popInfo[tokenId] = POPInfo(jvCoreTokenId, block.number, block.timestamp);
+    }
+
+    // 根据 tokenId 查询徽章信息
+    function getPOPInfo(uint256 tokenId) public view returns (POPInfo memory) {
+        _requireOwned(tokenId); // 使用 _requireOwned 检查 tokenId 是否存在
+        return _popInfo[tokenId];
     }
 
     // 生成 Token URI
@@ -45,9 +51,9 @@ contract POPBadge is ERC721Enumerable {
                         '"checkInBlockNumber": ', _popInfo[tokenId].checkInBlockNumber.toString(), ',',
                         '"checkInTimestamp": ', _popInfo[tokenId].checkInTimestamp.toString(),
                         '}'
-                    )
-                )
-            )
+        )
+        )
+        )
         );
         return string(abi.encodePacked("data:application/json;base64,", json));
     }
@@ -61,7 +67,7 @@ contract POPBadge is ERC721Enumerable {
         return string(
             abi.encodePacked(
                 '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="', color, '"/></svg>'
-            )
+        )
         );
     }
 
